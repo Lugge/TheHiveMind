@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{66316CDE-7549-16D4-FDC7-95A3B1407DA7}</ProjectGuid>
+	<ProjectGuid>{3C0AFE8B-020A-6514-3EDE-9C36619A6A51}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -46,17 +46,24 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AI\Ant\AntAI.cs" />
-     <Compile Include="Assets\AI\Ant\AntMemory.cs" />
-     <Compile Include="Assets\AI\Ant\InterfaceAI.cs" />
-     <Compile Include="Assets\AI\Ant\SearcherAnt.cs" />
-     <Compile Include="Assets\AI\Ant\Tasks.cs" />
-     <Compile Include="Assets\AI\Ant\WorkerAnt.cs" />
-     <Compile Include="Assets\AntBehaviour.cs" />
-     <Compile Include="Assets\AntHillAI.cs" />
-     <Compile Include="Assets\Food.cs" />
-     <Compile Include="Assets\Path.cs" />
-     <Compile Include="Assets\foodHandler.cs" />
+     <Compile Include="Assets\Scripts\Actions\Tasks\CollectTask.cs" />
+     <Compile Include="Assets\Scripts\Actions\Tasks\DefaultTask.cs" />
+     <Compile Include="Assets\Scripts\Actions\Tasks\OptimizeTask.cs" />
+     <Compile Include="Assets\Scripts\Actions\Tasks\SearchTask.cs" />
+     <Compile Include="Assets\Scripts\Actions\Tasks\Task.cs" />
+     <Compile Include="Assets\Scripts\Ant\AI\AntAI.cs" />
+     <Compile Include="Assets\Scripts\Ant\AI\AntMemory.cs" />
+     <Compile Include="Assets\Scripts\Ant\AI\Information.cs" />
+     <Compile Include="Assets\Scripts\Ant\Ant.cs" />
+     <Compile Include="Assets\Scripts\Ant\AntProperties.cs" />
+     <Compile Include="Assets\Scripts\Ant\Ants\SearcherAnt.cs" />
+     <Compile Include="Assets\Scripts\Ant\Ants\WorkerAnt.cs" />
+     <Compile Include="Assets\Scripts\AntBehaviour.cs" />
+     <Compile Include="Assets\Scripts\AntHillAI.cs" />
+     <Compile Include="Assets\Scripts\Food.cs" />
+     <Compile Include="Assets\Scripts\Path.cs" />
+     <Compile Include="Assets\Scripts\Util\Util.cs" />
+     <Compile Include="Assets\Scripts\foodHandler.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

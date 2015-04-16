@@ -1,0 +1,20 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Path.cs">
+    <Files>
+      <File FileName="Assets\Scripts\AntHillAI.cs" Line="12" Column="5" />
+      <File FileName="Assets\Scripts\Ant\Ants\WorkerAnt.cs" Line="6" Column="1" />
+      <File FileName="Assets\Scripts\AntBehaviour.cs" Line="14" Column="56" />
+      <File FileName="Assets\Scripts\Util\Util.cs" Line="18" Column="54" />
+      <File FileName="Assets\Scripts\Ant\Ant.cs" Line="7" Column="2" />
+      <File FileName="Assets\Scripts\Ant\AntProperties.cs" Line="5" Column="2" />
+      <File FileName="Assets\Scripts\Food.cs" Line="8" Column="17" />
+      <File FileName="Assets\Scripts\foodHandler.cs" Line="5" Column="2" />
+      <File FileName="Assets\Scripts\Path.cs" Line="39" Column="39" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
