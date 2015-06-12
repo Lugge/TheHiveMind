@@ -10,7 +10,7 @@ namespace AntHill
 	 * @author: Lukas Krose
 	 * @version: 1.0
 	 */
-	public abstract class Ant : Behaviour
+	public abstract class Ant
 	{
 		protected AntMemory mem;
 		protected AntAI ai;
@@ -18,35 +18,44 @@ namespace AntHill
 
 		public Task mvm;
 		public bool returnHome = false;
+		public int carriedWeight = 0;
 
+		public abstract Vector3 getNextMovement ();
+		public abstract string getType();
 
-		public abstract Vector3 getNextMovement();
-		public abstract void handleCollission (Collider other);
-		public abstract void supply ();
-		public abstract void reset ();
-
+		public virtual void supply (){
+		}
+		public virtual void reset (){
+			returnHome = false;
+			mem.initCommunication = false;
+			mvm.reset (mem.antHillPosition);
+			mem.reset ();
+			carriedWeight = 0;
+		}
 
 		/*
 		 * Inits the ant. Set all relevant information.
 		 * 
 		 * @param: string type Type of the ant
-		 * @param: Information info The info providedd by the hill
 		 * @param: int maxMvnts The maximum steps an ant can take
 		 * @param: int maxT The maximum distance an ant can travel
+		 * @param: Vector3 antHillPos The position of the hill
 		 * @author: Lukas Krose
 		 * @version: 1.0
 		 */
-		public void init (string type, Information info, int maxMvnts, float maxT)
+		public void init (string type, int maxMvnts, float maxT, Vector3 antHillPos)
 		{	
 			mem = new AntMemory (type);
 			prop = new AntProperties ();
 			prop.maxMovements = maxMvnts;
 			prop.maxTrvl = maxT;
+			prop.carryCapability = 5;
 			ai = new AntAI ();
 			setIdle (true);
-
-			mem.antHillPosition = info.antHillPosition;
-			setTask(new DefaultTask ());		
+			mem.antHillPosition = antHillPos;
+			setTask(new DefaultTask ());	
+			updatePosition (antHillPos);
+				
 		}
 
 		/*
@@ -64,6 +73,7 @@ namespace AntHill
 		/*
 		 * Sets the ant idle so it will not do anyhting
 		 * 
+		 * @param: bool idle True if the ant should be idle
 		 * @author: Lukas Krose
 		 * @version: 1.0
 		 */
@@ -139,7 +149,6 @@ namespace AntHill
 		 */
 		public bool needsSupply(){
 			if (wantsToCommunicate ()) {
-				Debug.Log("hier");
 				return false;
 			}
 			return mvm.needsSupply ();
@@ -176,6 +185,37 @@ namespace AntHill
 		 */
 		public bool wantsToCommunicate(){
 			return mem.initCommunication;
+		}
+
+		/*
+		 * Handles the moment when an ant gets a collision. If the collision is a food object it triggers the handleFood method.
+		 * 
+		 * @author: Lukas Krose
+		 * @since: 1.0
+		 */
+		public virtual void handleCollissionEnter (Collider other){
+			mem.enterCloseObject (other);
+		}
+
+		/*
+		 * Handles the moment when an ant exits a collision. If the collision is a food object it triggers the handleFood method.
+		 * 
+		 * @author: Lukas Krose
+		 * @since: 1.0
+		 */
+		public virtual void handleCollissionExit (Collider other){
+			mem.enterCloseObject (other);
+		}
+
+		/*
+		 * Returns the current task
+		 * 
+		 * @return: Task the current task
+		 * @author: Lukas Krose
+		 * @version: 1.0
+		 */
+		public string getTask(){
+			return mvm.getType ();
 		}
 
 	}

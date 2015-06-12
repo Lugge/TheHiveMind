@@ -7,8 +7,6 @@ namespace AntHill
 	/*
 	 * This class contains all information of a food pile
 	 * 
-	 * @ToDo: Refactoring
-	 * 
 	 * @author: Lukas Krose
 	 * @version: 1.0
 	 */
@@ -17,5 +15,6 @@ namespace AntHill
 		public Path path;
 		public bool isEmpty = false;
 		public GameObject foodObject;
+		public int sentAnts = 0;
 	}
 }

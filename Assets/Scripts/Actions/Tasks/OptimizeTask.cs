@@ -22,6 +22,19 @@ namespace AntHill
 	 */
 	public class OptimizeTask : Task
 	{
+
+		/*
+		 * Returns the type of the task
+		 * 
+		 * @return: string The type
+		 * @author: Lukas Krose
+		 * @version: 1.0
+		 */
+
+		public override string getType ()
+		{
+			return "OptimizeTask";
+		}
 		/*
 		 * Initializes the task. Path is reset and the position of the ant hill is addeed as first entry to the path.
 		 * 

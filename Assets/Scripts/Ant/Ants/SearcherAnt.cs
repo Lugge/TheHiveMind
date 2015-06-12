@@ -26,10 +26,7 @@ namespace AntHill
 		 */
 		public override Vector3 getNextMovement(){
 
-			if (isIdle ()) {
-				Debug.Log("Idle");
-				return mvm.getCurrentPos();
-			}
+			if (isIdle ())return mvm.getCurrentPos();
 
 			if(hasToUpdateFood && mvm.isAtPosition(foodToUpdate.transform.position)){
 				updateFood();
@@ -40,6 +37,17 @@ namespace AntHill
 			}
 
 			return mvm.perform ();
+		}
+
+		/*
+		 * Returns the type of the ant
+		 * 
+		 * @return: string The type
+		 * @author: Lukas Krose
+		 * @version: 1.0
+		 */
+		public override string getType() {
+			return "Searcher";
 		}
 
 		/*
@@ -78,7 +86,8 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public override void handleCollission(Collider other){
+		public override void handleCollissionEnter(Collider other){
+			base.handleCollissionEnter(other);
 			if (other.tag == "Food" && Util.isValid(other.transform.position, mvm.getCurrentPos())) {
 				handleFood(other);
 			}
@@ -91,9 +100,7 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void reset() {
-			returnHome = false;
-			mvm.reset (mem.antHillPosition);
-			mem.reset ();
+			base.reset ();
 		}
 
 		/*
@@ -117,7 +124,7 @@ namespace AntHill
 			Food foundFood = new Food();
 			foundFood.foodObject = foodToUpdate;
 			foundFood.path = mvm.path;
-			if(foodToUpdate.GetComponent<foodHandler> ().foodPoints <= 0){
+			if(!foodToUpdate.GetComponent<foodObject> ().hasFoodLeft()){
 				foundFood.isEmpty = true;
 			}
 			

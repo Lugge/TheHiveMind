@@ -12,6 +12,24 @@ namespace AntHill
 	 */
 	public class SearchTask : Task
 	{
+
+		public SearchTask(){
+
+		}
+
+		/*
+		 * Returns the type of the task
+		 * 
+		 * @return: string The type
+		 * @author: Lukas Krose
+		 * @version: 1.0
+		 */
+
+		public override string getType ()
+		{
+			return "SearchTask";
+		}
+
 		/*
 		 * Initializes the task. Path is resetet and the position of the ant hill is addeed as first entry to the path.
 		 * The current phase is reseted to 1.
@@ -80,7 +98,14 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void supply(Vector3 anthillPosition){
-			init (anthillPosition, prop);
+			currentStepCount = 0;
+
+			baseInit (anthillPosition, prop);
+			path = new Path ();
+			path.addMovement (anthillPosition);
+			currentStepCount++;
+			phase = 1;
+			return;
 		}
 
 

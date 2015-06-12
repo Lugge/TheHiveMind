@@ -11,6 +11,20 @@ namespace AntHill
 	 */
 	public class CollectTask : Task
 	{
+
+		/*
+		 * Returns the type of the task
+		 * 
+		 * @return: string The type
+		 * @author: Lukas Krose
+		 * @version: 1.0
+		 */
+
+		public override string getType ()
+		{
+			return "CollectTask";
+		}
+
 	
 		/*
 		 * Initializes the task. Sets the path to the path to the targeted food.

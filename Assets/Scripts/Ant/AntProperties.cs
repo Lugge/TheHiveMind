@@ -12,6 +12,7 @@ namespace AntHill
 	{
 		public int maxMovements;
 		public float maxTrvl;
+		public int carryCapability;
 	}
 }
 

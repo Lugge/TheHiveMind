@@ -27,11 +27,11 @@ namespace AntHill
 		public Food targetFood;
 		public Vector3 target;
 
-
 		public abstract void init (Vector3 anthillPosition, AntProperties prop);
 		public abstract Vector3 perform ();
 		public abstract void reset (Vector3 anthillPosition);
 		public abstract void supply (Vector3 anthillPosition);
+		public abstract string getType ();
 
 
 		/*
@@ -186,6 +186,7 @@ namespace AntHill
 			prop = properties;
 
 		}
+
 
 	}
 }

@@ -15,7 +15,7 @@ namespace AntHill
 		public float speed;
 		public int maxMovements;
 		public float maxTrvl;
-		public Ant ant;
+		private Ant ant;
 
 
 		private Vector3 nextMovementTarget;
@@ -25,10 +25,11 @@ namespace AntHill
 		/*
 		 * Creates and initializes an new ant
 		 * 
+		 * @param: strin type The type of the ant
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public void init(string type, Information info) {
+		public void init(string type) {
 
 			switch (type)
 			{
@@ -42,10 +43,14 @@ namespace AntHill
 				Debug.Log("Type not found!");
 				break;
 			}
-			ant.init (type, info, maxMovements, maxTrvl);
-			ant.updatePosition (transform.position);
+
+			ant.init (type, maxMovements, maxTrvl, transform.position);
 
 			nextMovementTarget = transform.position;
+		}
+
+		public Ant getAnt(){
+			return ant;
 		}
 
 				
@@ -75,7 +80,11 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		void OnTriggerEnter(Collider other) {
-			ant.handleCollission(other);
+			ant.handleCollissionEnter(other);
+		}
+
+		void OnTriggerExit(Collider other) {
+			ant.handleCollissionExit(other);
 		}
 	}
 }

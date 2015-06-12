@@ -14,6 +14,20 @@ namespace AntHill
 	{
 
 		/*
+		 * Returns the type of the task
+		 * 
+		 * @return: string The type
+		 * @author: Lukas Krose
+		 * @version: 1.0
+		 */
+
+		public override string getType ()
+		{
+			return "DefaultTask";
+		}
+
+
+		/*
 		 * Initializes the task. Path is reset and the position of the ant hill is addeed as first entry to the path.
 		 * 
 		 * @param: Vector3 anthillPosition The Position of the ant hill

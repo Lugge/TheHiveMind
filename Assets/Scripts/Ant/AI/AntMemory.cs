@@ -15,12 +15,14 @@ namespace AntHill
 
 		//Type of ant, can not be changed
 		private string antType;
+		private List<Collider> closeObjects = new List<Collider>();
 
 
 		public Vector3 antHillPosition;
 		public Food[] knownFood = new Food[0];
 		public Food foundFood = null;
 		public bool initCommunication = false;
+		public string typeOfCarriedObjects = "none";
 
 
 		/*
@@ -56,6 +58,19 @@ namespace AntHill
 			knownFood = new Food[0];
 			foundFood = null;		
 			initCommunication = false;
+		}
+
+		public void enterCloseObject(Collider obj){
+			closeObjects.Add (obj);
+		}
+		public void exitCloseObject(Collider obj){
+			closeObjects.Remove (obj);
+		}
+		public Collider getCloseObjectAtPosition(Vector3 pos){
+			foreach (Collider col in closeObjects) {
+				if(col.transform.position == pos)return col;
+			}
+			return new Collider ();
 		}
 	}
 }
