@@ -43,62 +43,62 @@
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="Number">3</Data></Cell>
+    <Cell><Data ss:Type="Number">-12000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="Number">-9000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="Number">-5000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="Number">-5000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
-    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="Number">-4000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="Number">20</Data></Cell>
+    <Cell><Data ss:Type="Number">45</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="Number">20</Data></Cell>
+    <Cell><Data ss:Type="Number">50</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="Number">20</Data></Cell>
+    <Cell><Data ss:Type="Number">50</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
-    <Cell><Data ss:Type="Number">20</Data></Cell>
+    <Cell><Data ss:Type="Number">50</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleSearcherInBase</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="Number">100</Data></Cell>
+    <Cell><Data ss:Type="Number">90</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleSearcherInBase</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="Number">90</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleWorkerInBase</Data></Cell>
@@ -108,12 +108,12 @@
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">searcherCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="Number">100</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">workerCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="Number">30</Data></Cell>
    </Row>
   </Table>
   <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
@@ -128,8 +128,8 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>1</ActiveRow>
-     <ActiveCol>1</ActiveCol>
+     <ActiveRow>6</ActiveRow>
+     <ActiveCol>2</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

@@ -16,8 +16,8 @@
   <AllowPNG/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>6270</WindowHeight>
-  <WindowWidth>16635</WindowWidth>
+  <WindowHeight>8160</WindowHeight>
+  <WindowWidth>21570</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
@@ -60,7 +60,7 @@
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
@@ -70,27 +70,27 @@
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 10 ) - 50 ) * 0.15 ) ))</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 10 ) - 50 ) * 0.15 ) ))</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="String"> ( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String"> ( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 10 ) - 50 ) * 0.15 ) ))</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="String"> ( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 10 ) - 50 ) * 0.15 ) ))</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
@@ -110,7 +110,7 @@
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="String">100 - ( 100 / ( 1 + e^( - (  (  knownFood  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
@@ -125,7 +125,7 @@
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleSearcherInBase</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  (  searcherInBase  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleWorkerInBase</Data></Cell>
@@ -152,11 +152,11 @@
    </PageSetup>
    <Unsynced/>
    <Selected/>
-   <TopRowVisible>6</TopRowVisible>
+   <TopRowVisible>5</TopRowVisible>
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>22</ActiveRow>
+     <ActiveRow>10</ActiveRow>
      <ActiveCol>2</ActiveCol>
     </Pane>
    </Panes>

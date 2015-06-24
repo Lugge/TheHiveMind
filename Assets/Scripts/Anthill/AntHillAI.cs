@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using B83.ExpressionParser;
 
 /*
  * This class represents the actual AI. It evaluates its knowledge and decides the next steps based on his configuration.
@@ -19,6 +20,7 @@ namespace AntHill
 
 		//If this is set to true, the hill will display every single step in his decision process.
 		private bool debug = false;
+		private string debugTask = "";
 
 		/*
 		 * Constructor. Sets the initial configuration and the ant template.
@@ -53,15 +55,23 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @version: 1.0
 		 */
-		public Food decideFoodToCollect(){
+		public Food decideFood(String providedFunction, string type){
 			Food decided = null;
 			double lastEval = -1000;
 
 			foreach (Food food in mem.knownFood) {
-				String func = mem.conf.foodToCollectFormula;
+				string func = providedFunction; 
 				func = func.Replace ("metric", food.path.metric.ToString ());
 				func = func.Replace ("searcherPerFood", food.sentAnts.ToString ());
+				func = func.Replace ("optimizerPerFood", food.sentOptimizer.ToString ());
 				double funcVal = evaluateFunction (func);
+
+				if(type == "OptimizeTask"){
+					if(food.path.metric <= mem.conf.minStepsToOpt || food.pathIsOptimal){
+						funcVal = -1000;
+					}
+				}
+
 				if(food.isEmpty){
 					funcVal = funcVal - 10000;
 				}
@@ -98,6 +108,12 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 		public void decide () {
+
+			if (debugTask == "OptimizeTask") {
+				debugOptimize ();
+				return;
+			}
+
 			string decision = evaluateNextDecision ();
 
 			typeof(AntHillAI).GetMethod (decision).Invoke (this, new object[]{});
@@ -114,9 +130,9 @@ namespace AntHill
 		 */
 		private string evaluateNextDecision(){
 			System.Random rnd = new System.Random();
-			string lastBestOption = "";
-			double optionVal = 0;
-			Dictionary<string, double> funcCount = new Dictionary<string, double>();
+			string lastBestOption = "nothing";
+			float optionVal = 0;
+			Dictionary<string, float> funcCount = new Dictionary<string, float>();
 
 			foreach (var evaluation in mem.evalFunc){
 				foreach(var item in evaluation.Value ){
@@ -132,19 +148,27 @@ namespace AntHill
 					mem.currentEval[item.Key] = mem.currentEval[item.Key] + evaluateFunction(func) * rnd.Next(1, mem.conf.randomness);
 				}
 			}
-			foreach(var eval in mem.currentEval){
-				double finalVal = eval.Value / funcCount[eval.Key];
 
+
+			foreach(var eval in mem.currentEval){
+				float finalVal = (float)eval.Value;
+				if(mem.conf.useKOCriteria && evaluateKOCriteria(eval.Key)){
+					finalVal = 0;
+				}
+
+				if(debug){
+					Debug.Log(eval.Key + ":" + finalVal);
+				}
 				if(finalVal > optionVal){
-					if(debug){
-						Debug.Log(eval.Key + ":" + optionVal);
-					}
 					optionVal = finalVal;
 					lastBestOption = eval.Key;
 				}
 			}
 
-			Debug.Log (lastBestOption);
+			if((mem.antCaps || mem.foodCaps) && mem.hill.getFoodCount() > 10000){
+				lastBestOption = "increaseHillSize";
+			}
+			//Debug.Log (lastBestOption);
 			mem.resetEval ();
 			return lastBestOption;
 		}
@@ -157,7 +181,7 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @version: 1.0
 		 */
-		private double evaluateFunction (string func){
+		private float evaluateFunction (string func){
 			func = func.Replace ("foodCount", mem.hill.getFoodCount().ToString());
 			func = func.Replace ("knownFood", mem.activeFoodSources.ToString());
 			func = func.Replace ("searcherAnts", mem.ants["Searcher"].Count.ToString());
@@ -165,11 +189,57 @@ namespace AntHill
 			func = func.Replace ("searcherInBase", mem.antsInBase["Searcher"].Count.ToString());
 			func = func.Replace ("workerInBase", mem.antsInBase["Worker"].Count.ToString());
 
-			DataTable table = new DataTable();
-			table.Columns.Add("expression", typeof(string), func);
-			DataRow row = table.NewRow();
-			table.Rows.Add(row);
-			return double.Parse((string)row["expression"]);
+			
+			return evaluateExpression (func);
+		}
+
+		private float evaluateExpression(string func) {
+			var parser = new ExpressionParser();
+			Expression exp = parser.EvaluateExpression(func);
+			return (float)exp.Value;
+		}
+
+		private bool evaluateKOCriteria(string decision) {
+			if (mem.hill.getFoodCount () < 0)
+				return true;
+			switch(decision){
+			case "spawnSearcher":
+				if (mem.hill.getFoodCount () < 1500)
+					return true;
+				if (mem.antCaps)
+					return true;
+				break;
+			case "spawnWorker":
+				if (mem.hill.getFoodCount () < 1000)
+					return true;
+				if (mem.activeFoodSources == 0)
+					return true;
+				if (mem.antCaps)
+					return true;
+				break;
+			case "sendSearcherToSearch":
+				if (mem.antsInBase["Searcher"].Count == 0)
+					return true;
+				break;
+			case "sendSearcherToOptimize":
+				if (mem.antsInBase["Searcher"].Count == 0)
+					return true;
+				bool isFoodLeft = false;
+				foreach(Food f in mem.knownFood) {
+					if(f.sentOptimizer == 0 && f.path.metric > mem.conf.minStepsToOpt && !f.pathIsOptimal){
+						isFoodLeft = true;
+					}
+				}
+				if(!isFoodLeft)return true;
+				break;
+			case "sendWorkerToCollect":
+				if (mem.antsInBase["Worker"].Count == 0)
+					return true;
+				if (mem.activeFoodSources == 0)
+					return true;
+				break;
+			}
+			return false;
 		}
 
 		/*
@@ -182,9 +252,12 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 		public void communicate(Ant ant, Task task){
-			instructAnt (ant, task);
 			mem.antsInBase [ant.getMemory().getType ()].Remove(ant);
-			mem.hill.updateFoodCount(- 1);
+			instructAnt (ant, task);
+
+			int supplies = ant.getNeededSupplies ();
+			mem.hill.updateFoodCount(- supplies);
+			ant.supply (supplies);
 			ant.setIdle (false);
 		}
 
@@ -199,7 +272,11 @@ namespace AntHill
 		public void antHasReachedBase(Ant ant){
 			AntMemory antMem = ant.getMemory();
 			if (antMem.foundFood != null) {
-				mem.updateFoodList(antMem.foundFood);
+				if(ant.getTask() == "OptimizeTask"){
+					mem.updateFoodList(antMem.foundFood, true);
+				}else {
+					mem.updateFoodList(antMem.foundFood, false);
+				}
 				
 			}
 			if (ant.carriedWeight > 0) {
@@ -207,8 +284,10 @@ namespace AntHill
 			}
 
 			if (ant.getType () == "Worker" && ant.getTask() == "CollectTask") {
-				mem.knownFood[mem.knownFood.IndexOf(ant.mvm.targetFood)].sentAnts--;
-
+				mem.getFoodAtPos(ant.mvm.getInitialTarget()).sentAnts--;
+			}
+			if (ant.getType () == "Searcher" && ant.getTask() == "OptimizeTask") {
+				mem.getFoodAtPos(ant.mvm.getInitialTarget()).sentOptimizer --;
 			}
 			ant.reset();
 			mem.antsInBase [antMem.getType ()].Add(ant);
@@ -224,7 +303,7 @@ namespace AntHill
 		 */
 		public void instructAnt(Ant ant){
 			Task def = new DefaultTask();
-			def.target = mem.hill.position;
+			def.setTarget(mem.hill.position);
 			instructAnt (ant, def);
 		}
 
@@ -251,7 +330,11 @@ namespace AntHill
 		 */
 		public void transferCollectedfromAnt(Ant ant, String type){
 			if(type == "Food"){
+				try{
 				mem.hill.updateFoodCount (ant.carriedWeight);
+				}catch (UnityException e){
+					Debug.Log (e);
+				}
 			}
 		}
 		/*
@@ -272,7 +355,11 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 		public void spawnSearcher(){
-			mem.hill.updateFoodCount(- 10);
+			if (mem.getAntCount () + 1 >= mem.hill.maxAnts) {
+				mem.antCaps = true;
+				return;
+			}
+			mem.hill.updateFoodCount(- mem.hill.antCost);
 			Ant searcher = util.spawnSearcher (mem.ant, mem.hill.position, mem.hill.rotation);
 			mem.addAnt (searcher);
 			mem.antsInBase ["Searcher"].Add(searcher);
@@ -285,7 +372,11 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 		public void spawnWorker(){
-			mem.hill.updateFoodCount(- 10);
+			if (mem.getAntCount () + 1 >= mem.hill.maxAnts) {
+				mem.antCaps = true;
+				return;
+			}
+			mem.hill.updateFoodCount(- mem.hill.antCost);
 			Ant worker = util.spawnWorker (mem.ant, mem.hill.position, mem.hill.rotation);
 			mem.addAnt (worker);
 			mem.antsInBase ["Worker"].Add(worker);
@@ -299,7 +390,7 @@ namespace AntHill
 		 */
 		public void sendSearcherToSearch(){
 			Task search = new SearchTask ();
-			search.target = mem.hill.position;
+			search.setTarget(mem.hill.position);
 			sendAnt ("Searcher", search);
 		}
 
@@ -311,7 +402,14 @@ namespace AntHill
 		 */
 		public void sendSearcherToOptimize(){
 			Task optimize = new OptimizeTask ();
-			optimize.targetFood = decideFoodToCollect();
+			Food decided = decideFood(mem.conf.foodToOptimizeFormula, "OptimizeTask");
+			if (decided == null) {
+				Debug.Log("No food to optimize");
+				return;
+			}
+			optimize.setTarget (decided.foodObject.transform.position);
+			optimize.setPath (decided.path);
+			decided.sentOptimizer++;
 			sendAnt ("Searcher", optimize);
 		}
 
@@ -323,13 +421,17 @@ namespace AntHill
 		 */
 		public void sendWorkerToCollect(){
 			Task collect = new CollectTask ();
-			Food collectFood = decideFoodToCollect();
+			Food collectFood = decideFood(mem.conf.foodToCollectFormula, "CollectTask");
 			if (collectFood == null) {
 				Debug.Log("No food to collect");
 				return;
 			}
-			collect.targetFood = collectFood;
-			mem.knownFood[mem.knownFood.IndexOf(collectFood)].sentAnts++;
+			//collect.targetFood = collectFood;
+			collect.setTarget (collectFood.foodObject.transform.position);
+			collect.setPath (collectFood.path);
+			//Debug.Log (collect.getTarget());
+			//collectFood.path.debugPath ();
+			collectFood.sentAnts++;
 
 			sendAnt ("Worker", collect);
 		}
@@ -344,12 +446,57 @@ namespace AntHill
 		 */
 		public void sendAnt(string type, Task task){
 			if (mem.antsInBase [type].Count > 0) {
-				communicate (mem.antsInBase [type][0], task);
+				Ant antInBase = mem.antsInBase [type][0];
+				setColor (antInBase, task.getType());
+				communicate (antInBase, task);
 			} else {
 				Debug.Log("Could not send Ant. No ant in base.");
 			}
 		}
+		
+		
+		
+		
+		public void setColor(Ant ant, string task) {
+			Renderer antRenderer = ant.antRenderer;
+			Debug.Log((Material)Resources.Load("Ant_work", typeof(Material)));
+			switch (task) {
+			case "CollectTask":
+				
+				antRenderer.sharedMaterial = (Material)Resources.Load("Ant_work", typeof(Material));
+				break;
+			case "SearchTask":
+				antRenderer.sharedMaterial = (Material)Resources.Load("Ant_search", typeof(Material));
+				break;
+			case "OptimizeTask":
+				antRenderer.sharedMaterial = (Material)Resources.Load("Ant_opt", typeof(Material));
+				break;
+				
+			}
+			
+		}
 
+		public void increaseHillSize() {
+			mem.antCaps = false;
+			mem.foodCaps = false;
+			mem.hill.updateSize ();
+		}
+
+		private void debugOptimize() {
+			if (mem.ants ["Searcher"].Count == 0) {
+				spawnSearcher();
+				return;
+			}
+			if (mem.knownFood.Count == 0) {
+				sendSearcherToSearch();
+				return;
+			}
+			sendSearcherToOptimize ();
+		}
+
+		public void setFoodCaps(bool caps){
+			mem.foodCaps = caps;
+		}
 
 	}
 }

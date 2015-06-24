@@ -25,16 +25,34 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override Vector3 getNextMovement(){
-
+			if (!mvm.hasReachedNextPosition ())return mvm.getStepTarget();
 			if (isIdle ())return mvm.getCurrentPos();
+
+			int add = 0;
+			if (getTask () == "SearchTask") {
+				add = 1;
+			}
 
 			if(hasToUpdateFood && mvm.isAtPosition(foodToUpdate.transform.position)){
 				updateFood();
 			}
-			if (!mvm.hasStepsLeft()) {
-				mvm.phase = 3;
+
+			if (getTask () == "OptimizeTask" && mvm.success() && mvm.finished() && mvm.isAtFinalTarget() && !hasFoundFood) {
+				try{
+					foodToUpdate = mem.getCloseObjectAtPosition(mvm.getCurrentPos(), "Food").gameObject;
+					hasFoundFood = true;
+					updateFood();
+				}
+				catch(UnityException e){
+					Debug.Log(e + " Position:" + mvm.getCurrentPos());
+				}
+			}
+
+			if (foodSupplies <= (maxSupplies / 2) + add) {
 				goHome();
 			}
+			foodSupplies--;
+
 
 			return mvm.perform ();
 		}
@@ -64,6 +82,9 @@ namespace AntHill
 			if (hasFoundFood) {
 				return;
 			}
+			if (!Util.isValid (other.gameObject.transform.position, mvm.getCurrentPos())) {
+				return;
+			}
 
 			foreach(Food food in mem.knownFood){
 				if (food.foodObject == other.gameObject){
@@ -74,7 +95,7 @@ namespace AntHill
 				}
 			}
 			mvm.phase = 2;
-			mvm.target = other.gameObject.transform.position;
+			mvm.setTarget(other.gameObject.transform.position);
 			foodToUpdate = other.gameObject;
 			hasToUpdateFood = true;
 
@@ -88,7 +109,7 @@ namespace AntHill
 		 */
 		public override void handleCollissionEnter(Collider other){
 			base.handleCollissionEnter(other);
-			if (other.tag == "Food" && Util.isValid(other.transform.position, mvm.getCurrentPos())) {
+			if (other.tag == "Food" && Util.isValid(other.transform.position, mvm.getCurrentPos()) && getTask() == "SearchTask" ) {
 				handleFood(other);
 			}
 		}
@@ -100,6 +121,9 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void reset() {
+			hasFoundFood = false;
+			hasToUpdateFood = false;
+			foodToUpdate = null;
 			base.reset ();
 		}
 
@@ -109,13 +133,13 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public override void supply() {
+		public override void supply(int supplies) {
+			base.supply (supplies);
 			mvm.supply (mem.antHillPosition);
 		}
 				
 		/*
 		 * Updates the food object in the memory when food has been found.
-		 * Sets the phase of the Search-Task to 3.
 		 * 
 		 * @author: Lukas Krose
 		 * @since: 1.0
@@ -123,7 +147,7 @@ namespace AntHill
 		private void updateFood(){
 			Food foundFood = new Food();
 			foundFood.foodObject = foodToUpdate;
-			foundFood.path = mvm.path;
+			foundFood.path = new Path (mvm.traveledPath);
 			if(!foodToUpdate.GetComponent<foodObject> ().hasFoodLeft()){
 				foundFood.isEmpty = true;
 			}
@@ -131,8 +155,9 @@ namespace AntHill
 			mem.foundFood = foundFood;
 			hasFoundFood = true;
 			Debug.Log("found Food");
-			
-			mvm.phase = 3;
+
+			mvm.transferPath ();
+
 			goHome ();
 		}
 	}

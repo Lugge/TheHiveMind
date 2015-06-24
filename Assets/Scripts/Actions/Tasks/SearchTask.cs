@@ -40,14 +40,15 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void init(Vector3 anthillPosition, AntProperties properties){
-			currentStepCount = 0;
-			stepCount = 0;
+			currentStepCount = 1;
 
 			baseInit (anthillPosition, properties);
-			path = new Path ();
-			path.addMovement (anthillPosition);
-			currentStepCount++;
+
+			traveledPath = new Path ();
+			traveledPath.addMovement (anthillPosition);
 			phase = 1;
+			initialTarget = getTarget ();
+
 			return;
 		}
 
@@ -66,8 +67,9 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override Vector3 perform() {
-			if (!hasReachedNextPosition ())return nextMovementTarget;
-			stepCount++;
+
+
+			currentStepCount++;
 			if (phase == 2) {
 				return phase2();
 			}
@@ -98,12 +100,10 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void supply(Vector3 anthillPosition){
-			currentStepCount = 0;
-
+			currentStepCount = 1;
 			baseInit (anthillPosition, prop);
-			path = new Path ();
-			path.addMovement (anthillPosition);
-			currentStepCount++;
+			traveledPath = new Path ();
+			traveledPath.addMovement (anthillPosition);
 			phase = 1;
 			return;
 		}
@@ -120,15 +120,8 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		private Vector3 phase1(){
-
-			do{
-				nextMovementTarget = currentPosition + new Vector3 ((Random.value - 0.5f) * prop.maxTrvl, 0.0f, (Random.value - 0.5f) * prop.maxTrvl);
-			}while(!Util.isValid (nextMovementTarget, currentPosition));
-			
-			currentStepCount++;
-			path.addMovement (nextMovementTarget);			
-			target = nextMovementTarget;
-			return nextMovementTarget;
+			finalTarget = moveRandom();
+			return finalTarget;
 		}
 
 		/*
@@ -143,7 +136,20 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		private Vector3 phase2(){
-			return moveTo(target);
+
+			try{
+				Vector3 next = moveDirection (finalTarget);
+				taskSuccessful = true;
+				taskFinished = true;
+				return next;
+			}
+			catch(UnityException e){
+				Debug.Log(e);
+				finalTarget = moveRandom();
+				return finalTarget;
+			}
+
+
 		}
 
 		/*
@@ -155,7 +161,13 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		private Vector3 phase3(){
-			return getNextStepOnPath(target);
+			return moveOnPath(finalTarget);
+		}
+
+		public override void goHome() {
+			finalTarget = traveledPath.getMovement (0);
+			transferPath ();
+			phase = 3;
 		}
 	}
 }

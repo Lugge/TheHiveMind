@@ -15,15 +15,19 @@ namespace AntHill
 		protected AntMemory mem;
 		protected AntAI ai;
 		protected AntProperties prop;
+		protected int maxSupplies = 0;		
+		public Renderer antRenderer;
 
 		public Task mvm;
 		public bool returnHome = false;
 		public int carriedWeight = 0;
+		protected int foodSupplies = 0;
 
 		public abstract Vector3 getNextMovement ();
 		public abstract string getType();
 
-		public virtual void supply (){
+		public virtual void supply (int supplies){
+			foodSupplies = foodSupplies + supplies;
 		}
 		public virtual void reset (){
 			returnHome = false;
@@ -43,18 +47,16 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @version: 1.0
 		 */
-		public void init (string type, int maxMvnts, float maxT, Vector3 antHillPos)
+		public void init (string type, AntProperties p , Vector3 antHillPos)
 		{	
 			mem = new AntMemory (type);
-			prop = new AntProperties ();
-			prop.maxMovements = maxMvnts;
-			prop.maxTrvl = maxT;
-			prop.carryCapability = 5;
+			prop = p;
 			ai = new AntAI ();
 			setIdle (true);
 			mem.antHillPosition = antHillPos;
 			setTask(new DefaultTask ());	
 			updatePosition (antHillPos);
+			maxSupplies = prop.maxMovements;
 				
 		}
 
@@ -102,7 +104,7 @@ namespace AntHill
 		 */
 		public void goHome(){
 			mem.initCommunication = true;
-			mvm.target = mem.antHillPosition;
+			mvm.goHome ();
 		}
 
 		/*
@@ -151,7 +153,7 @@ namespace AntHill
 			if (wantsToCommunicate ()) {
 				return false;
 			}
-			return mvm.needsSupply ();
+			return foodSupplies <= (maxSupplies / 2) + 1;
 		}
 
 		/*
@@ -218,6 +220,13 @@ namespace AntHill
 			return mvm.getType ();
 		}
 
+		public int getSuppliesLeft() {
+			return foodSupplies;
+		}
+
+		public int getNeededSupplies() {
+			return maxSupplies - foodSupplies;
+		}
 	}
 }
 

@@ -12,6 +12,39 @@ namespace AntHill
 		public  XMLImport ()
 		{
 		}
+
+		/*
+		public static Dictionary<string, Dictionary<string, Dictionary<string, string>>> importXML3D(string xmlName) {
+			Dictionary<string, Dictionary<string, Dictionary<string, string>>> dict = new Dictionary<string, Dictionary<string, Dictionary<string, string>>> ();
+			string path = Application.dataPath;
+			string xml_path = path + "/" + xmlName;
+			
+			if (!File.Exists(xml_path))
+			{			
+				Debug.Log("File Not Found");
+				throw new ArgumentException(); 
+			}
+			XmlDocument xDoc = new XmlDocument();
+			xDoc.Load(xml_path);
+			XmlNodeList rowNodes = xDoc.GetElementsByTagName ("Row");
+			
+			//TranslateDictionary<string, TranslateDictionary<string, string>> dict = new TranslateDictionary<string, TranslateDictionary<string, string>>();
+			for (int i = 0;  i < rowNodes.Count; i++)
+			{				 
+				XmlNodeList cellNodes = rowNodes[i].ChildNodes;
+				if(!dict.ContainsKey(cellNodes[0].InnerText)) dict.Add(cellNodes[0].InnerText, new Dictionary<string, string>());
+				if(cellNodes[1] != null){					
+					if(!dict[cellNodes[0].InnerText].ContainsKey(cellNodes[1].InnerText)) dict[cellNodes[0].InnerText].Add(cellNodes[1].InnerText, new Dictionary<string, string>());
+					dict[cellNodes[0].InnerText][cellNodes[1].InnerText].Add("formula", cellNodes[2].InnerText);
+					dict[cellNodes[0].InnerText][cellNodes[1].InnerText].Add("greaterZero", cellNodes[3].InnerText);
+					dict[cellNodes[0].InnerText][cellNodes[1].InnerText].Add("SmallerEqualZero", cellNodes[4].InnerText);
+				}
+			}
+			
+			return dict;
+		}
+		*/
+
 		
 		public static Dictionary<string, Dictionary<string, string>> importXML2D(string xmlName) {
 			Dictionary<string, Dictionary<string, string>> dict = new Dictionary<string, Dictionary<string, string>> ();
@@ -54,7 +87,6 @@ namespace AntHill
 			}
 			XmlDocument xDoc = new XmlDocument();
 			xDoc.Load(xml_path);
-			Debug.Log (xDoc.GetElementsByTagName("Row").Count);
 			XmlNodeList rowNodes = xDoc.GetElementsByTagName ("Row");
 			
 			//TranslateDictionary<string, TranslateDictionary<string, string>> dict = new TranslateDictionary<string, TranslateDictionary<string, string>>();
@@ -80,7 +112,6 @@ namespace AntHill
 			}
 			XmlDocument xDoc = new XmlDocument();
 			xDoc.Load(xml_path);
-			Debug.Log (xDoc.GetElementsByTagName("Row").Count);
 			XmlNodeList rowNodes = xDoc.GetElementsByTagName ("Row");
 			
 			//TranslateDictionary<string, TranslateDictionary<string, string>> dict = new TranslateDictionary<string, TranslateDictionary<string, string>>();

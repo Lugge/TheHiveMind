@@ -37,9 +37,10 @@ namespace AntHill
 		 */
 		public override void init(Vector3 anthillPosition, AntProperties properties){
 			baseInit (anthillPosition, properties);
-			path = new Path ();
-			path.addMovement (anthillPosition);
-			currentStepCount++;
+			traveledPath = new Path ();
+			traveledPath.addMovement (anthillPosition);
+			currentStepCount = 1;
+			initialTarget = getTarget ();
 			return;
 		}
 		/*
@@ -51,7 +52,6 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override Vector3 perform(){
-			if (!hasReachedNextPosition ())return currentPosition;
 			return currentPosition;
 		}
 
@@ -76,6 +76,10 @@ namespace AntHill
 		 */
 		public override void supply(Vector3 anthillPosition){
 			return;
+		}
+
+		public override void goHome() {
+			finalTarget = traveledPath.getMovement (0);
 		}
 
 	}

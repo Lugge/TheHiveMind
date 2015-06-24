@@ -39,7 +39,7 @@
    <Column ss:Width="123.75"/>
    <Row>
     <Cell><Data ss:Type="String">nothing</Data></Cell>
-    <Cell><Data ss:Type="Number">40</Data></Cell>
+    <Cell><Data ss:Type="Number">150</Data></Cell>
    </Row>
    <Row>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>

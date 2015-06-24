@@ -27,7 +27,7 @@ namespace AntHill
 
 	
 		/*
-		 * Initializes the task. Sets the path to the path to the targeted food.
+		 * Initializes the task.
 		 * 
 		 * @param: Vector3 anthillPosition The Position of the ant hill
 		 * @param: AntProperties prop The properties of the ant
@@ -36,10 +36,11 @@ namespace AntHill
 		 */
 		public override void init(Vector3 anthillPosition, AntProperties properties){
 			baseInit (anthillPosition, properties);
-			path = targetFood.path;
-			target = targetFood.foodObject.transform.position;
+			currentStepCount = 0;
 
-			return;
+			initialTarget = getTarget ();
+			traveledPath = new Path ();
+			traveledPath.addMovement (anthillPosition);
 		}
 
 		/*
@@ -52,9 +53,7 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override Vector3 perform(){
-			if (!hasReachedNextPosition ())return nextMovementTarget;
-			stepCount++;
-			return getNextStepOnPath (target);
+			return moveOnPath (finalTarget);
 		}
 		/*
 		 * Resets the task. 
@@ -65,9 +64,7 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void reset(Vector3 anthillPosition){
-			currentStepCount = 0;
-			stepCount = 0;
-			path = new Path();
+			traveledPath = new Path();
 			init (anthillPosition, prop);
 		}
 		
@@ -82,6 +79,11 @@ namespace AntHill
 		 */
 		public override void supply(Vector3 anthillPosition){
 
+		}
+
+		public override void goHome() {
+			taskFinished = true;
+			finalTarget = traveledPath.getMovement (0);
 		}
 	}
 }

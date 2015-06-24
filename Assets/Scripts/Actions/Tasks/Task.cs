@@ -17,25 +17,32 @@ namespace AntHill
 
 		//Movement-related variables, should only be changed by tasks
 		protected int currentStepCount = 0;
-		protected int stepCount = 0;
 		protected Vector3 currentPosition;
 		protected Vector3 nextMovementTarget;
+		protected bool taskSuccessful = false;
+		protected bool taskFinished = false;
+
 
 		//Task related variables
-		public Path path = new Path();
+		public Path traveledPath = new Path();
+		public Path providedPath = new Path();
+
+
 		public int phase = 0;
-		public Food targetFood;
-		public Vector3 target;
+		//public Food targetFood;
+		protected Vector3 finalTarget;
+		protected Vector3 initialTarget;
 
 		public abstract void init (Vector3 anthillPosition, AntProperties prop);
 		public abstract Vector3 perform ();
 		public abstract void reset (Vector3 anthillPosition);
 		public abstract void supply (Vector3 anthillPosition);
 		public abstract string getType ();
+		public abstract void goHome ();
 
 
 		/*
-		 * Moves to the next step on a path
+		 * Retruns a step on the path
 		 * Returns the next position on the current path in direction of a given position (on the path)
 		 * Returns the current position if the target position is not in the list or the target has been reached
 		 * 
@@ -44,29 +51,49 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public Vector3 getNextStepOnPath(Vector3 position) {
+		public Vector3 moveOnPath(Vector3 position, Path localPath) {
 
-			int arrayPos = path.path.IndexOf (position);
-
-			if (arrayPos == -1 || currentStepCount == arrayPos)
-				return currentPosition;
-
-			if (currentStepCount < arrayPos) {
-				currentStepCount++;
-			} else{
-				currentStepCount--;
+			int arrayPos = localPath.path.IndexOf (position);
+			Vector3 currentStepObject = localPath.getStepObject (currentPosition);
+			if (!localPath.path.Contains (currentStepObject)) {
+				throw new UnityException ("You are not on a path");
 			}
 
-			nextMovementTarget = path.getMovement (currentStepCount);
+			int currentPathPosition = localPath.path.IndexOf (currentStepObject);
+
+			if (arrayPos == -1 || currentPathPosition == arrayPos)
+				return currentStepObject;
+
+			if (currentPathPosition < arrayPos) {
+				currentPathPosition++;
+			} else{
+				currentPathPosition--;
+			}
+			nextMovementTarget = localPath.getMovement (currentPathPosition);
+
+			traveledPath.addMovement (nextMovementTarget);			
 			return nextMovementTarget;			
 		}
 
+		public Vector3 moveOnPath(Vector3 position) {
+			return moveOnPath (position, providedPath);
+		}
+
+		public Vector3 moveRandom() {
+			do{
+				nextMovementTarget = currentPosition + new Vector3 ((Random.value - 0.5f) * prop.maxTrvl, 0.0f, (Random.value - 0.5f) * prop.maxTrvl);
+			}while(!Util.isValid (nextMovementTarget, currentPosition));
+			
+			currentStepCount++;
+			traveledPath.addMovement (nextMovementTarget);			
+			return nextMovementTarget;
+		}
+	
 		/*
-		 * Moves to a given position
+		 * Return a Vector towards a given position
 		 * Returns the next valid position in the direction of an given position or the position if it is directly reachable.
 		 * Returns the current position if the target is not reachable
 		 * 
-		 * @ToDo: Split path into multiple vectors if position is too far away
 		 * @ToDo obstacle avoidance?, return to origin if the position could not be reached?
 		 * 
 		 * @param: Vector3 position The target position
@@ -74,11 +101,20 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public Vector3 moveTo(Vector3 position) {
-
+		public Vector3 moveDirection(Vector3 position) {
 			currentStepCount++;
-			path.addMovement (position);
-			nextMovementTarget = position;
+			Vector3 dirVector = position - currentPosition;
+			Vector3 direction = position;
+
+			if(dirVector.magnitude > prop.maxTrvl){
+				direction = currentPosition + Vector3.ClampMagnitude(dirVector, prop.maxTrvl);;
+
+			}
+			if (!Util.isValid (direction, currentPosition)) {
+				throw new UnityException("Direction not valid");
+			}
+			nextMovementTarget = direction;
+			traveledPath.addMovement (nextMovementTarget);			
 			return nextMovementTarget;
 		}
 
@@ -112,7 +148,7 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public bool hasReachedTarget(){
-			return target == currentPosition;
+			return finalTarget == currentPosition;
 		}
 
 		/*
@@ -122,8 +158,8 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public bool hasStepsLeft(){
-			return prop.maxMovements >= stepCount;
+		public int getCurrentStepCount(){
+			return currentStepCount;
 		}
 
 		/*
@@ -136,18 +172,6 @@ namespace AntHill
 		 */
 		public bool isAtPosition(Vector3 position){
 			return currentPosition == position;
-		}
-
-		/*
-		 * Indicates if the ant needs to be supplied
-		 * (Note: The ant needs to be supplied if it has made more than three steps, because by then it has been surely out of the hill)
-		 * 
-		 * @return: bool
-		 * @author: Lukas Krose
-		 * @since: 1.0
-		 */
-		public bool needsSupply(){
-			return currentStepCount > 2;
 		}
 
 		/*
@@ -169,7 +193,7 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public int getStepCount(){
-			return stepCount;
+			return currentStepCount;
 		}
 
 		/*
@@ -184,10 +208,43 @@ namespace AntHill
 			currentPosition = anthillPosition;
 			nextMovementTarget = currentPosition;
 			prop = properties;
-
 		}
 
+		public void setTarget (Vector3 target) {
+			finalTarget = target;
+		}
 
+		public void setPath (Path path) {
+			providedPath = path;
+		}
+
+		public Vector3 getTarget() {
+			return finalTarget;
+		}
+
+		public Vector3 getStepTarget() {
+			return nextMovementTarget;
+		}
+
+		public bool success() {
+			return taskSuccessful;
+		}
+
+		public bool finished() {
+			return taskFinished;
+		}
+
+		public void transferPath () {
+			providedPath = new Path(traveledPath);
+		}
+
+		public Vector3 getInitialTarget() {
+			return initialTarget;
+		}
+
+		public bool isAtFinalTarget() {
+			return currentPosition == initialTarget;
+		}
 	}
 }
 

@@ -9,15 +9,15 @@
   <Author>Lugge</Author>
   <LastAuthor>Lugge</LastAuthor>
   <Created>2015-06-12T14:22:29Z</Created>
-  <LastSaved>2015-06-19T12:44:52Z</LastSaved>
+  <LastSaved>2015-06-18T11:07:21Z</LastSaved>
   <Version>15.00</Version>
  </DocumentProperties>
  <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
   <AllowPNG/>
  </OfficeDocumentSettings>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
-  <WindowHeight>6270</WindowHeight>
-  <WindowWidth>16635</WindowWidth>
+  <WindowHeight>9135</WindowHeight>
+  <WindowWidth>24000</WindowWidth>
   <WindowTopX>0</WindowTopX>
   <WindowTopY>0</WindowTopY>
   <ProtectStructure>False</ProtectStructure>
@@ -34,113 +34,157 @@
   </Style>
  </Styles>
  <Worksheet ss:Name="Tabelle1">
-  <Table ss:ExpandedColumnCount="3" ss:ExpandedRowCount="21" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="5" ss:ExpandedRowCount="21" x:FullColumns="1"
    x:FullRows="1" ss:DefaultColumnWidth="60" ss:DefaultRowHeight="15">
    <Column ss:Width="123.75" ss:Span="1"/>
+   <Column ss:Index="3" ss:Width="274.5"/>
+   <Column ss:Width="183.75"/>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">nothing</Data></Cell>
     <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
     <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
     <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
     <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
     <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">default</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
     <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100- ( 100 / ( 1 +  x ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( ( foodCount - ( 100 * impact ) ) / 100) </Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100- ( 100 / ( 1 +  x  ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( ( foodCount - ( 100 * impact ) ) / 100)</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="String"> ( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100- ( 100 / ( 1 +  x  ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( ( foodCount - ( 100 * impact ) ) / 100)</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="String"> ( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foodCount</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  ( ( foodCount  + impact ) / 100 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100- ( 100 / ( 1 +  x  ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( ( foodCount - ( 100 * impact ) ) / 100)</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="String">100 - ( 100 / ( 1 + e^( - (  (  knownFood  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100 / (1 + x )</Data></Cell>
+    <Cell><Data ss:Type="String">( knownFood * impact )</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  (  knownFood  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100- ( 100 / ( 1 +  x ) )</Data></Cell>
+    <Cell><Data ss:Type="String"> ( knownFood * impact) </Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="String">100 - ( 100 / ( 1 + e^( - (  (  knownFood  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100 / ( 1 + x)</Data></Cell>
+    <Cell><Data ss:Type="String">( knownFood * impact ) </Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="String">100 - ( 100 / ( 1 + e^( - (  (  knownFood  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">foundFood</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  (  knownFood  * impact ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100- ( 100 / ( 1 + x ) )</Data></Cell>
+    <Cell><Data ss:Type="String"> ( knownFood * impact) </Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleSearcherInBase</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToSearch</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  (  searcherInBase  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100 - ( 100 / (1 + x ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( searcherInBase * impact )</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleSearcherInBase</Data></Cell>
     <Cell><Data ss:Type="String">sendSearcherToOptimize</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  (  searcherInBase  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="Number">-1000</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">idleWorkerInBase</Data></Cell>
     <Cell><Data ss:Type="String">sendWorkerToCollect</Data></Cell>
-    <Cell><Data ss:Type="String">( 100 / ( 1 + e^( - (  (  ( workerInBase  * impact )  ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100 - ( 100 / (1 + x ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( workerInBase * impact )</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">searcherCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnSearcher</Data></Cell>
-    <Cell><Data ss:Type="String">100 - ( 100 / ( 1 + e^( - (  (  searcherAnts  * impact   ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100 / ( 1 + ( x / 3 ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( searcherAnts * impact )</Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0">
     <Cell><Data ss:Type="String">workerCount</Data></Cell>
     <Cell><Data ss:Type="String">spawnWorker</Data></Cell>
-    <Cell><Data ss:Type="String">100 -( 100 / ( 1 + e^( - (  (  ( workerAnts  * impact   ) / 3 ) - 50 ) * 0.15 ) ))</Data></Cell>
+    <Cell><Data ss:Type="String">100 / ( 1 + ( x/ 3 ) )</Data></Cell>
+    <Cell><Data ss:Type="String">( workerAnts * impact ) </Data></Cell>
+    <Cell><Data ss:Type="Number">0</Data></Cell>
    </Row>
   </Table>
   <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
@@ -152,12 +196,11 @@
    </PageSetup>
    <Unsynced/>
    <Selected/>
-   <TopRowVisible>6</TopRowVisible>
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>22</ActiveRow>
-     <ActiveCol>2</ActiveCol>
+     <ActiveRow>20</ActiveRow>
+     <ActiveCol>3</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>

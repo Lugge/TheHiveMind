@@ -15,6 +15,8 @@ namespace AntHill
 		public float speed;
 		public int maxMovements;
 		public float maxTrvl;
+		public int carryCap;
+		public int foodSupplies;
 		private Ant ant;
 
 
@@ -30,7 +32,11 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public void init(string type) {
-
+			AntProperties p = new AntProperties ();
+			p.maxTrvl = maxTrvl;
+			p.carryCapability = carryCap;
+			p.maxMovements = maxMovements;
+			//int maxMvnts, float maxT
 			switch (type)
 			{
 			case "Searcher":
@@ -44,7 +50,7 @@ namespace AntHill
 				break;
 			}
 
-			ant.init (type, maxMovements, maxTrvl, transform.position);
+			ant.init (type, p, transform.position);
 
 			nextMovementTarget = transform.position;
 		}
@@ -63,6 +69,7 @@ namespace AntHill
 		 */
 		void Update () {
 			ant.updatePosition (transform.position);
+			foodSupplies = ant.getSuppliesLeft ();
 
 			Vector3 newMovementTarget = ant.getNextMovement();
 			if (newMovementTarget != nextMovementTarget) {
@@ -70,7 +77,8 @@ namespace AntHill
 				nextMovementTarget = newMovementTarget;
 			}
 
-			transform.position = Vector3.Lerp(transform.position, nextMovementTarget, (Time.time - startTime) * speed);
+			//transform.position = Vector3.Lerp(transform.position, nextMovementTarget, (Time.time - startTime) * speed);
+			transform.position = Vector3.MoveTowards(transform.position, nextMovementTarget, (Time.time - startTime) * speed);
 		}
 
 		/*

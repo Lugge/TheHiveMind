@@ -18,6 +18,7 @@ namespace AntHill{
 		public string baseConf;
 		public string impactConf;
 		public string defaultConf;
+		public int antCost;
 
 		/*
 		 * This function is called upon initialization of the AntHill
@@ -29,7 +30,7 @@ namespace AntHill{
 			AntHillAIConf conf = new AntHillAIConf (intialConf, baseConf, impactConf, defaultConf);
 			AntHillAI ai = new AntHillAI (conf, ant);
 
-			hill = new AntHill (ai, transform.position, transform.rotation, foodCount);
+			hill = new AntHill (ai, transform.position, transform.rotation, foodCount, antCost);
 		}
 		
 		/*

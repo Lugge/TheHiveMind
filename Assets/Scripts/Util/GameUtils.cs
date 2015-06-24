@@ -12,9 +12,9 @@ using System.Collections.Generic;
  */
 namespace AntHill
 {
-
+	
 	public class GameUtils {
-
+		
 		/*
 		 * This function creates a new searcher
 		 * 
@@ -26,10 +26,13 @@ namespace AntHill
 		 * @version: 1.1
 		 */
 		public Ant spawnSearcher(Rigidbody ant, Vector3 at, Quaternion rotation) {
-
+			
 			Rigidbody searcherClone = (Rigidbody) MonoBehaviour.Instantiate(ant, at, rotation);
+			
 			searcherClone.GetComponent<AntBehaviour> ().init ("Searcher");
-			return searcherClone.GetComponent<AntBehaviour> ().getAnt();
+			Ant newAnt = searcherClone.GetComponent<AntBehaviour> ().getAnt ();
+			newAnt.antRenderer = searcherClone.GetComponent<Renderer> ();
+			return newAnt;
 		}
 		
 		
@@ -47,9 +50,11 @@ namespace AntHill
 		public Ant spawnWorker(Rigidbody ant, Vector3 at, Quaternion rotation) {
 			Rigidbody searcherClone = (Rigidbody) MonoBehaviour.Instantiate(ant, at, rotation);
 			searcherClone.GetComponent<AntBehaviour> ().init ("Worker");
-			return searcherClone.GetComponent<AntBehaviour> ().getAnt();
+			Ant newAnt = searcherClone.GetComponent<AntBehaviour> ().getAnt ();
+			newAnt.antRenderer = searcherClone.GetComponent<Renderer> ();
+			return newAnt;
 		}
-
+		
 	}
 }
 

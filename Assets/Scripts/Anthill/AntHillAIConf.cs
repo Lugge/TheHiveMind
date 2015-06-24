@@ -13,11 +13,15 @@ namespace AntHill
 {
 	public class AntHillAIConf
 	{
-		public readonly int[] antRatio = new int[]{5,1};
+		//public readonly int[] antRatio = new int[]{5,1};
 		public readonly int maxThinkTime = 10;
 		public readonly int randomness = 2;
+		public readonly bool useKOCriteria = true;
+		public readonly int minStepsToOpt = 2;
+		public readonly int optTrys = 3;
 
-		public readonly string foodToCollectFormula = "metric - searcherPerFood";
+		public readonly string foodToCollectFormula = "100 - metric - searcherPerFood";
+		public readonly string foodToOptimizeFormula = "optimizerPerFood * (-100)";
 		public readonly Dictionary<string, double> initialEvalConfig = new Dictionary<string, double> ();
 		public readonly Dictionary<string, Dictionary <string, string>> baseEvalFunc = new Dictionary<string, Dictionary <string, string>> ();
 		public readonly Dictionary<string, Dictionary <string, string>> impact = new Dictionary<string, Dictionary <string, string>> ();
@@ -104,7 +108,6 @@ namespace AntHill
 			initialEvalConfig = XMLImport.importXML1DDouble (initialConfigXML);
 			baseEvalFunc = XMLImport.importXML2D (baseEvalXML);
 			impact = XMLImport.importXML2D (impactXML);
-			//initialEvalConfig = XMLImport.importXML1D (initialConfigXML);
 		}
 
 	}

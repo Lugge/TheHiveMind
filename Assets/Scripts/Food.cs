@@ -16,5 +16,8 @@ namespace AntHill
 		public bool isEmpty = false;
 		public GameObject foodObject;
 		public int sentAnts = 0;
+		public int sentOptimizer = 0;
+		public bool pathIsOptimal = false;
+		public int optcount = 0;
 	}
 }

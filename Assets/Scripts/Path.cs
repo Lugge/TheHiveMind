@@ -17,7 +17,16 @@ namespace AntHill
 		public List<Vector3> path = new List<Vector3>();
 
 		public Path ()
+		{	
+		}
+
+		public Path (Path p)
 		{
+			path = new List<Vector3>();
+			foreach (Vector3 v in p.path) {
+				path.Add(v);
+			}
+			metric = p.metric;
 		}
 
 		/*
@@ -43,6 +52,23 @@ namespace AntHill
 		public Vector3 getMovement(int step){
 			return path [step];
 		}
+
+		public Vector3 getStepObject(Vector3 pos){
+			for (int c = 0; c< path.Count; c++) {
+				if(path[c] == pos) {
+					return path[c];
+				}
+			}
+			return new Vector3();
+		}
+
+		public void debugPath() {
+			foreach (Vector3 v in path) {
+				Debug.Log (v);
+			}
+		}
+
+
 	}
 }
 

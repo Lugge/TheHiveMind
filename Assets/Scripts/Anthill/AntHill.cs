@@ -15,9 +15,13 @@ namespace AntHill
 	public class AntHill
 	{
 		private int foodCount;
-		public int size = 0;
+		public int size = 1;
 		public Vector3 position;
 		public Quaternion rotation;
+		public int antCost;
+		public int maxFood;
+		public int maxAnts;
+		private int baseFoodCountMax;
 
 		private AntHillAI ai;
 
@@ -32,13 +36,17 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 
-		public AntHill (AntHillAI hillAI, Vector3 pos, Quaternion rot, int initFoodCount)
+		public AntHill (AntHillAI hillAI, Vector3 pos, Quaternion rot, int initFoodCount, int cost)
 		{
 			foodCount = initFoodCount;
+			baseFoodCountMax = initFoodCount;
 			position = pos;
 			rotation = rot;
 			ai = hillAI;
 			ai.init (this);
+			antCost = cost;
+			maxFood = baseFoodCountMax * size;
+			maxAnts = size * 50;
 		}
 
 		/*
@@ -63,6 +71,11 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 		public void updateFoodCount (int incBy){
+			if (foodCount + incBy > maxFood) {
+				ai.setFoodCaps(true);
+				throw new UnityException("Cant store more Food");
+			}
+			ai.setFoodCaps(false);
 			foodCount = foodCount + incBy;
 		}
 
@@ -75,6 +88,14 @@ namespace AntHill
 		 */
 		public int getFoodCount () {
 			return foodCount;
+		}
+
+		public void updateSize(){
+			Debug.Log ("UpdateSize");
+			updateFoodCount (-10000);
+			size = size + 1;
+			maxFood = baseFoodCountMax * size;
+			maxAnts = size * 50;
 		}
 
 		/*
@@ -90,7 +111,9 @@ namespace AntHill
 				if (ant.wantsToCommunicate ()) {
 					if(ant.hasReachedTarget())ai.antHasReachedBase (ant);
 				} else if(ant.needsSupply()) {
-					ant.supply ();
+					int supplies = ant.getNeededSupplies();
+					updateFoodCount(-supplies);
+					ant.supply (supplies);
 				}
 			}
 		}

@@ -23,6 +23,11 @@ namespace AntHill
 	public class OptimizeTask : Task
 	{
 
+		private Path optimizePath = new Path();
+		private Path optimizeFin = new Path ();
+		private bool debug = false;
+
+
 		/*
 		 * Returns the type of the task
 		 * 
@@ -47,9 +52,13 @@ namespace AntHill
 		 */
 		public override void init(Vector3 anthillPosition, AntProperties properties){
 			baseInit (anthillPosition, properties);
-			path = new Path ();
-			path.addMovement (anthillPosition);
-			currentStepCount++;
+			currentStepCount = 1;
+			traveledPath = new Path ();
+			traveledPath.addMovement (anthillPosition);
+			optimizeFin = new Path ();
+			optimizePath = new Path ();
+			initialTarget = getTarget ();
+			phase = 1;
 
 			return;
 		}
@@ -67,8 +76,25 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override Vector3 perform() {
-			if (!hasReachedNextPosition ())return nextMovementTarget;
-			return nextMovementTarget;
+
+			if(phase == 1){
+				return phase1();
+			}
+			if(phase == 2){
+				return phase2();
+			}
+			if(phase == 3){
+				return phase3();
+			}
+			if(phase == 4){
+				return phase4();
+			}
+			if(phase == 5){
+				return phase5();
+			}
+
+			return phase6();
+			
 			/*
 			Vector3 lastCoord = mem.currentTask.target;
 			
@@ -90,6 +116,112 @@ namespace AntHill
 
 		}
 
+		public Vector3 phase1 () {
+			if (debug) Debug.Log ("Start");
+			System.Random rnd = new System.Random ();
+
+			phase = 2;
+			optimizeFin.addMovement (providedPath.getMovement (0));
+			if(rnd.Next(1,10) <= 5){
+				if (debug) Debug.Log("startAt0");
+				return providedPath.getMovement(0);
+			}
+			return providedPath.getMovement (1);
+		}
+
+		public Vector3 phase2() {
+
+			if (debug) Debug.Log ("Phase2");
+			Vector3 currentStepObject = providedPath.getStepObject (currentPosition);
+			int curIndex = providedPath.path.IndexOf (currentStepObject);
+			if (curIndex == -1) {
+				if (debug) Debug.Log("curPos: " + currentPosition);
+				providedPath.debugPath();
+				throw new UnityException("Error in phase 2. Can not find current position on Path.");
+			}
+			if (providedPath.path.IndexOf (initialTarget) == curIndex + 1) {
+				if (debug)
+					Debug.Log ("OneStepToGo");
+				setTarget (providedPath.getMovement (curIndex + 1));
+			} else if (providedPath.path.IndexOf (initialTarget) == curIndex) {
+				goHome ();
+				return phase6 ();
+			} else {
+				setTarget (providedPath.getMovement (curIndex + 2));
+			}
+
+			phase = 3;
+			optimizePath = new Path ();
+			if (debug) Debug.Log("To Optimize: " + getTarget());
+			return phase3 ();
+		}
+
+		public Vector3 phase3() {
+			if (debug) Debug.Log ("Phase3");
+			try{
+				moveDirection (getTarget());
+				if (debug) Debug.Log ("Opt:" + nextMovementTarget);
+			}
+			catch(UnityException e){
+				if (debug) Debug.Log(e);
+				if(optimizePath.path.Count == 0){
+					phase = 5;
+					return phase5();
+				} else{
+					phase = 4;
+					setTarget (optimizePath.getMovement(0));
+					return phase4();
+				}
+			}
+
+			optimizePath.addMovement (nextMovementTarget);
+
+			if(nextMovementTarget == getTarget()){
+				if (debug) Debug.Log("reachedStep");
+				phase = 2;
+				foreach(Vector3 v in optimizePath.path){
+					optimizeFin.addMovement(v);
+				}
+			}
+
+			if(nextMovementTarget == initialTarget) {
+				goHome ();
+				taskSuccessful = true;
+				if (debug) Debug.Log("Success");
+				traveledPath = new Path(optimizeFin);
+			}
+
+
+			return nextMovementTarget;
+		}
+
+		public Vector3 phase4() {
+			if (debug) Debug.Log ("Phase4");
+			if(hasReachedTarget()){
+				phase = 5;
+				return phase5 ();
+			}
+			return moveOnPath (finalTarget, optimizePath);
+		}
+
+		public Vector3 phase5() {
+			if (debug) Debug.Log ("Phase5");
+			Vector3 currentStepObject = providedPath.getStepObject (currentPosition);
+			int curIndex = providedPath.path.IndexOf (currentStepObject);
+			if(curIndex == -1){
+				throw new UnityException("Error in phase 5. Can not find current position on Path.");
+			}
+			phase = 2;
+			moveOnPath (providedPath.getMovement(curIndex + 1));
+			optimizePath.addMovement (nextMovementTarget);
+			return nextMovementTarget;
+		}
+
+		public Vector3 phase6() {
+			if (debug) Debug.Log ("Phase6 " + finalTarget);
+			return moveOnPath (finalTarget);
+		}
+
 		/*
 		 * Resets the task. 
 		 * Clears the current and total step count and reinitializes itself.
@@ -99,9 +231,6 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void reset(Vector3 anthillPosition){
-			currentStepCount = 0;
-			stepCount = 0;
-			path = new Path();
 			init (anthillPosition, prop);
 		}
 		/*
@@ -113,7 +242,15 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override void supply(Vector3 anthillPosition){
-			reset (anthillPosition);
+			//reset (anthillPosition);
+			return;
+		}
+
+		public override void goHome() {
+			if (debug) Debug.Log ("Head home");
+			phase = 6;
+			taskFinished = true;
+			finalTarget = traveledPath.getMovement (0);
 		}
 	}
 }

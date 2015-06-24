@@ -25,6 +25,8 @@ namespace AntHill
 
 		public int activeFoodSources = 0;
 		public List<Food> knownFood = new List<Food>();
+		public bool foodCaps = false;
+		public bool antCaps = false;
 
 		public Dictionary<string, List<Ant>> antsInBase =  new Dictionary<string, List<Ant>>(){
 			{"Searcher", new List<Ant>()},
@@ -53,28 +55,35 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @version: 1.1
 		 */
-		public void updateFoodList(Food updateFood) {
-			Food newFood = updateFood;
+		public void updateFoodList(Food updateFood, bool hasBeenOptimized) {
 
 			foreach(Food food in knownFood){
 				if (food.foodObject == updateFood.foodObject){
-					//newFood = food;
-					if(food.path.metric > updateFood.path.metric){
-						Debug.Log("Update");
-						food.path = updateFood.path;
+					Debug.Log("Update");
+					if(hasBeenOptimized){
+						food.optcount++;
+						if(food.path.metric > updateFood.path.metric) {
+							food.optcount = 0;
+						}
+						if(food.optcount >= conf.optTrys){
+							food.pathIsOptimal = true;
+						}
+					}
+					if(food.path.metric > updateFood.path.metric || hasBeenOptimized){
+						food.path = new Path(updateFood.path);
 					}
 					if(!food.isEmpty && updateFood.isEmpty){
 						food.isEmpty = updateFood.isEmpty;
-						Debug.Log(activeFoodSources);
 						activeFoodSources--;
 					}
 					return;
 				}
 			}
-			if (!newFood.isEmpty) {
+			Debug.Log ("NEW");
+			if (!updateFood.isEmpty) {
 				activeFoodSources++;
 			}
-			knownFood.Add (newFood);
+			knownFood.Add (updateFood);
 		}
 
 		/*
@@ -137,6 +146,19 @@ namespace AntHill
 		 */
 		public void killAnt(Ant ant) {
 			ants[ant.getType()].Remove (ant);
+		}
+
+		public Food getFoodAtPos(Vector3 pos){
+			foreach (Food food in knownFood) {
+				if (food.foodObject.transform.position == pos){
+					return food;
+				}
+			}
+			return new Food();
+		}
+
+		public int getAntCount () {
+			return ants ["Searcher"].Count + ants ["Worker"].Count;
 		}
 	}
 }

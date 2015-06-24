@@ -67,10 +67,21 @@ namespace AntHill
 			closeObjects.Remove (obj);
 		}
 		public Collider getCloseObjectAtPosition(Vector3 pos){
+			return getCloseObjectAtPosition (pos, "");
+		}
+
+		public Collider getCloseObjectAtPosition(Vector3 pos, string tag){
 			foreach (Collider col in closeObjects) {
-				if(col.transform.position == pos)return col;
+				if(col.transform.position == pos){
+					if(tag.Equals("")){
+						return col;
+					}else if(tag.Equals(col.gameObject.tag)){
+						return col;
+					}
+				}
+
 			}
-			return new Collider ();
+			throw new UnityException ("No close Object");
 		}
 	}
 }

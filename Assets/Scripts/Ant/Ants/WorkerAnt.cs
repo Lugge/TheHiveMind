@@ -11,6 +11,9 @@ namespace AntHill
 	 */
 	public class WorkerAnt : Ant
 	{
+
+		private bool isAtFood = false;
+
 		/*
 		 * Returns the next movement desicion of the ant.
 		 *
@@ -19,18 +22,18 @@ namespace AntHill
 		 * @since: 1.0
 		 */
 		public override Vector3 getNextMovement(){
+			if (!mvm.hasReachedNextPosition ())return mvm.getStepTarget();
+			if (isIdle () && !isAtFood)return mvm.getCurrentPos();
 
-			if (!mvm.hasStepsLeft()){
+			if (foodSupplies <= (maxSupplies / 2) + 1){
 				goHome();
 			}
 
-
-			if(mvm.hasReachedTarget()){
-				handleReachedTarget();
+			if (mvm.hasReachedTarget () && !mvm.finished()) {
+				handleReachedTarget ();
+			} else {
+				foodSupplies--;
 			}
-
-
-			if (isIdle())return mvm.getCurrentPos();
 			return mvm.perform ();
 		}
 
@@ -41,7 +44,6 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @version: 1.0
 		 */
-
 		public override string getType() {
 			return "Worker";
 		}
@@ -53,13 +55,18 @@ namespace AntHill
 		 * @version: 1.0
 		 */
 		private void handleReachedTarget(){
+			if(!mem.getCloseObjectAtPosition (mvm.getTarget(), "Food")){
+				return;
+			}
+			isAtFood = true;
 			setIdle(true);
-			if (carriedWeight < prop.carryCapability && mvm.targetFood.foodObject.GetComponent<foodObject> ().hasFoodLeft ()) {
+			foodObject food = mem.getCloseObjectAtPosition (mvm.getTarget(), "Food").GetComponent<foodObject> ();
+			if (carriedWeight < prop.carryCapability && food.hasFoodLeft ()) {
 				collect ();
-			} else if (!mvm.targetFood.foodObject.GetComponent<foodObject> ().hasFoodLeft ()) {
+			} else if (!food.hasFoodLeft ()) {
 				Food foundFood = new Food();
-				foundFood.foodObject = mvm.targetFood.foodObject;
-				foundFood.path = mvm.path;
+				foundFood.foodObject = food.gameObject;
+				foundFood.path = mvm.providedPath;
 				foundFood.isEmpty = true;
 
 				mem.foundFood = foundFood;
@@ -68,10 +75,12 @@ namespace AntHill
 				setIdle(false);
 				goHome();
 				mem.initCommunication = true;
+				isAtFood = false;
 			}else {
 				setIdle(false);
 				goHome();
 				mem.initCommunication = true;
+				isAtFood = false;
 			}
 		}
 
@@ -83,12 +92,12 @@ namespace AntHill
 		 */
 
 		private void collect(){
+			foodObject food = mem.getCloseObjectAtPosition (mvm.getTarget(), "Food").GetComponent<foodObject> ();
 			if (mem.typeOfCarriedObjects == "none") {
-				Collider obj = mem.getCloseObjectAtPosition (mvm.getCurrentPos ());
-				mem.typeOfCarriedObjects = obj.gameObject.tag;
+				mem.typeOfCarriedObjects = food.tag;
 			}
 			carriedWeight++; 
-			mvm.targetFood.foodObject.GetComponent<foodObject> ().lowerFoodPoints (1);
+			food.lowerFoodPoints (1);
 		}
 
 
@@ -108,7 +117,8 @@ namespace AntHill
 		 * @author: Lukas Krose
 		 * @since: 1.0
 		 */
-		public override void supply() {
+		public override void supply(int supplies) {
+			base.supply (supplies);
 			return;
 		}
 	}
